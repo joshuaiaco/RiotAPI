@@ -7,7 +7,7 @@ championlibrary = importlib.import_module('League-Champion-ID.getChampionNameByI
 getChampionNameByID = championlibrary.get_champions_name
 
 #declare api key
-APIKey = "RGAPI-9314d5fb-16e2-44aa-bdfa-1e1af77fe6f0"
+APIKey = "RGAPI-e626a976-6862-43bb-9ccb-91c69236fd21"
 
 # declare summoner name array and set input to nothing
 summoner_names = []
@@ -63,5 +63,6 @@ for i in range(len(summoner_names)):
     #print top 10 summoner champion info from API call
     champion = json.loads(response.text)
     for j in range(10):
-        print ("Champion: "+str(get_champions_name((champion[j]['championId']))))
+        championid = champion[j]['championId']
+        print ("Champion: "+str(getChampionNameByID(champion[j]['championId'])))
         print ("Summoner Level: "+str(champion[j]['championPoints']))
