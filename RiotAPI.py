@@ -2,6 +2,10 @@ import requests
 import json
 import importlib
 
+#this import statement is necessary because the directory with the champion ids has a dash
+championlibrary = importlib.import_module('League-Champion-ID.getChampionNameByID', None)
+getChampionNameByID = championlibrary.get_champions_name
+
 #declare api key
 APIKey = "RGAPI-9314d5fb-16e2-44aa-bdfa-1e1af77fe6f0"
 
@@ -59,5 +63,5 @@ for i in range(len(summoner_names)):
     #print top 10 summoner champion info from API call
     champion = json.loads(response.text)
     for j in range(10):
-        print ("Champion: "+str(champion[j]['championId']))
+        print ("Champion: "+str(get_champions_name((champion[j]['championId']))))
         print ("Summoner Level: "+str(champion[j]['championPoints']))
