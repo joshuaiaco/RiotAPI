@@ -7,7 +7,7 @@ championlibrary = importlib.import_module('League-Champion-ID.getChampionNameByI
 getChampionNameByID = championlibrary.get_champions_name
 
 #declare api key
-APIKey = "RGAPI-e626a976-6862-43bb-9ccb-91c69236fd21"
+APIKey = "RGAPI-1a87407b-af35-445e-be4d-185c841950b7"
 
 # declare summoner name array and set input to nothing
 summoner_names = []
@@ -38,7 +38,7 @@ for i in range(len(summoner_names)):
         response = requests.get(url = url, headers=headers,)
         user = json.loads(response.text)
 
-        #print summoner info from API call, assign encrypted UUID
+        #print summoner name from API call if found
         print ("Name: "+user['name'])
         
     #error handling    
@@ -50,7 +50,21 @@ for i in range(len(summoner_names)):
             print("Likely bad API key!")
 
     print ("Summoner Level: "+str(user['summonerLevel']))
+
+    #declare encrypted summoner id for use with other endpoints
     summoner_id = user['id']
+
+    #declare league url
+    LeagueUrl = "https://oc1.api.riotgames.com/lol/league/v4/entries/by-summoner/"
+
+    #declare and execute league API call
+    url = LeagueUrl+summoner_id
+    headers = {'X-Riot-Token': APIKey,}
+    response = requests.get(url = url, headers=headers,)
+
+    league = json.loads(response.text)
+    #print (json.dumps((league), sort_keys=True, indent=4))
+    print ("Losses: "+str(league[0]['losses']))
 
     #declare champion url
     ChampionUrl = "https://oc1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
@@ -60,9 +74,18 @@ for i in range(len(summoner_names)):
     headers = {'X-Riot-Token': APIKey,}
     response = requests.get(url = url, headers=headers,)
 
-    #print top 10 summoner champion info from API call
-    champion = json.loads(response.text)
-    for j in range(10):
-        championid = champion[j]['championId']
-        print ("Champion: "+str(getChampionNameByID(champion[j]['championId'])))
-        print ("Summoner Level: "+str(champion[j]['championPoints']))
+    #print top 10 summoner champion info from API call, handle summoner found but no/expired champions
+    try:
+        champion = json.loads(response.text)
+        for j in range(10):
+            championid = champion[j]['championId']
+            print ("Champion: "+str(getChampionNameByID(championid)))
+            print ("Mastery Level: "+str(champion[j]['championLevel']))
+            print ("Mastery Points: "+str(champion[j]['championPoints']))
+            print ("Chest earned?: "+str(champion[j]['chestGranted']))
+            print("")
+    except IndexError:
+        print("No champions found!")
+        continue
+
+
