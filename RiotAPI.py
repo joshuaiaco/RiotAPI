@@ -7,7 +7,7 @@ championlibrary = importlib.import_module('League-Champion-ID.getChampionNameByI
 getChampionNameByID = championlibrary.get_champions_name
 
 #declare api key
-APIKey = "RGAPI-1a87407b-af35-445e-be4d-185c841950b7"
+APIKey = "RGAPI-b95e0a70-bdef-4628-b410-838bd4c5c1e3"
 
 # declare summoner name array and set input to nothing
 summoner_names = []
@@ -41,13 +41,14 @@ for i in range(len(summoner_names)):
         #print summoner name from API call if found
         print ("Name: "+user['name'])
         
-    #error handling    
+    #error handling, print summoner name     
     except KeyError:
         if(response.status_code == 404):
             print("Summoner: "+summoner+" not found.")
             continue
         if(response.status_code == 403):
-            print("Likely bad API key!")
+            print("Check API key!")
+            break
 
     print ("Summoner Level: "+str(user['summonerLevel']))
 
@@ -63,8 +64,14 @@ for i in range(len(summoner_names)):
     response = requests.get(url = url, headers=headers,)
 
     league = json.loads(response.text)
-    #print (json.dumps((league), sort_keys=True, indent=4))
-    print ("Losses: "+str(league[0]['losses']))
+    print ("Tier: "+str(league[0]['tier']))
+    print ("LP: "+str(league[0]['leaguePoints']))
+    print ("Wins: "+str(league[0]['wins']))
+    print ("Losses: "+str(league[0]['losses'])) 
+    print ("Hot Streak?: "+str(league[0]['hotStreak']))
+    print ("Veteran?: "+str(league[0]['veteran']))
+    print ("")
+    
 
     #declare champion url
     ChampionUrl = "https://oc1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
@@ -88,4 +95,14 @@ for i in range(len(summoner_names)):
         print("No champions found!")
         continue
 
+    #declare total mastery levels url
+    MasteryUrl = "https://oc1.api.riotgames.com/lol/champion-mastery/v4/scores/by-summoner/"
 
+    #declare and execute mastery API call
+    url = MasteryUrl+summoner_id
+    headers = {'X-Riot-Token': APIKey,}
+    response = requests.get(url = url, headers=headers,)
+    
+    #print total mastery level
+    mastery = json.loads(response.text)
+    print ("Total mastery level: "+str(mastery))
