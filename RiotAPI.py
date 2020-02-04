@@ -13,6 +13,10 @@ APIKey = "RGAPI-562068f7-42f9-436d-a6cd-a1ce729472ef"
 summoner_names = []
 new_summoner = ''
 
+region_code = input("1. Brazil\n2. Europe North\n3. Europe West\n4. Japan \
+    \n5. Korea\n6. Latin America North\n7. Latin America South \
+    \n8. North America\n9. Oceania\n 10. Turkey\n 11. Russia")
+
 # loop through as many summoners as user requires, or exit
 while new_summoner != 'exit':
     new_summoner = input("Enter a summoner name, or type exit to finish: ")
@@ -106,3 +110,11 @@ for i in range(len(summoner_names)):
     #print total mastery level
     mastery = json.loads(response.text)
     print ("Total mastery level: "+str(mastery))
+
+    #declare total match url
+    MasteryUrl = "https://oc1.api.riotgames.com/lol/champion-mastery/v4/scores/by-summoner/"
+
+    #declare and execute match API call
+    url = MasteryUrl+summoner_id
+    headers = {'X-Riot-Token': APIKey,}
+    response = requests.get(url = url, headers=headers,)
