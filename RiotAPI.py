@@ -7,7 +7,7 @@ championlibrary = importlib.import_module('League-Champion-ID.getChampionNameByI
 getChampionNameByID = championlibrary.get_champions_name
 
 #declare api key
-APIKey = "RGAPI-b95e0a70-bdef-4628-b410-838bd4c5c1e3"
+APIKey = "RGAPI-562068f7-42f9-436d-a6cd-a1ce729472ef"
 
 # declare summoner name array and set input to nothing
 summoner_names = []
