@@ -7,15 +7,32 @@ championlibrary = importlib.import_module('League-Champion-ID.getChampionNameByI
 getChampionNameByID = championlibrary.get_champions_name
 
 #declare api key
-APIKey = "RGAPI-562068f7-42f9-436d-a6cd-a1ce729472ef"
+APIKey = "YourAPIKeyHere"
 
 # declare summoner name array and set input to nothing
 summoner_names = []
 new_summoner = ''
 
+#user selects region for API endpoint
 region_code = input("1. Brazil\n2. Europe North\n3. Europe West\n4. Japan \
     \n5. Korea\n6. Latin America North\n7. Latin America South \
-    \n8. North America\n9. Oceania\n 10. Turkey\n 11. Russia")
+    \n8. North America\n9. Oceania\n10. Turkey\n11. Russia\nEnter your region: ")
+
+#defining region dict for endpoint URL and assign region code to variable
+region = {
+    "1":  "br1",
+    "2":  "eun1",
+    "3":  "euw1",
+    "4":  "jp1",
+    "5":  "kr",
+    "6":  "la1",
+    "7":  "la2",
+    "8":  "na1",
+    "9":  "oc1",
+    "10": "tr1",
+    "11": "ru",
+}
+url_code = region.get(region_code)
 
 # loop through as many summoners as user requires, or exit
 while new_summoner != 'exit':
@@ -32,7 +49,7 @@ while new_summoner != 'exit':
 for i in range(len(summoner_names)):
 
     #declare summoner api endpoint to obtain encrypted summoner ID, and current summoner in array
-    SummonerUrl = "https://oc1.api.riotgames.com/lol/summoner/v4/summoners/by-name/"
+    SummonerUrl = "https://"+url_code+".api.riotgames.com/lol/summoner/v4/summoners/by-name/"
     summoner = summoner_names[i]
 
     #declare and execute summoner API call
@@ -60,7 +77,7 @@ for i in range(len(summoner_names)):
     summoner_id = user['id']
 
     #declare league url
-    LeagueUrl = "https://oc1.api.riotgames.com/lol/league/v4/entries/by-summoner/"
+    LeagueUrl = "https://"+url_code+".api.riotgames.com/lol/league/v4/entries/by-summoner/"
 
     #declare and execute league API call
     url = LeagueUrl+summoner_id
@@ -78,7 +95,7 @@ for i in range(len(summoner_names)):
     
 
     #declare champion url
-    ChampionUrl = "https://oc1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
+    ChampionUrl = "https://"+url_code+".api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/"
 
     #declare and execute champion API call
     url = ChampionUrl+summoner_id
@@ -100,7 +117,7 @@ for i in range(len(summoner_names)):
         continue
 
     #declare total mastery levels url
-    MasteryUrl = "https://oc1.api.riotgames.com/lol/champion-mastery/v4/scores/by-summoner/"
+    MasteryUrl = "https://"+url_code+".api.riotgames.com/lol/champion-mastery/v4/scores/by-summoner/"
 
     #declare and execute mastery API call
     url = MasteryUrl+summoner_id
@@ -112,7 +129,7 @@ for i in range(len(summoner_names)):
     print ("Total mastery level: "+str(mastery))
 
     #declare total match url
-    MasteryUrl = "https://oc1.api.riotgames.com/lol/champion-mastery/v4/scores/by-summoner/"
+    MasteryUrl = "https://"+url_code+".api.riotgames.com/lol/champion-mastery/v4/scores/by-summoner/"
 
     #declare and execute match API call
     url = MasteryUrl+summoner_id
