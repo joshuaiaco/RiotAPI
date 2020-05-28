@@ -1,6 +1,28 @@
 import requests
 import json
 import importlib
+import discord
+import os
+import sys
+
+from dotenv import load_dotenv
+#set variable to current path to locate .env file
+path = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.env'))
+
+load_dotenv(path)
+TOKEN = os.getenv('DISCORD_TOKEN')
+
+print(path)
+print(TOKEN)
+print(os.getcwd())
+
+client = discord.Client()
+
+@client.event
+async def on_ready():
+    print(f'{client.user} has connected to Discord!')
+
+#client.run(TOKEN)
 
 #this import statement is necessary because the directory with the champion ids has a dash
 championlibrary = importlib.import_module('League-Champion-ID.getChampionNameByID', None)
