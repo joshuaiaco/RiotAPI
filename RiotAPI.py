@@ -7,14 +7,13 @@ import sys
 
 from dotenv import load_dotenv
 #set variable to current path to locate .env file
-path = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '.env'))
+path = os.path.abspath(os.path.dirname(__file__))
 
-load_dotenv(path)
-TOKEN = os.getenv('DISCORD_TOKEN')
+load_dotenv(os.path.join(path, '.env'))
+TOKEN = os.getenv("DISCORD_TOKEN")
 
 print(path)
 print(TOKEN)
-print(os.getcwd())
 
 client = discord.Client()
 
