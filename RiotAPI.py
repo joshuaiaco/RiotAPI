@@ -26,7 +26,7 @@ championlibrary = importlib.import_module('League-Champion-ID.getChampionNameByI
 getChampionNameByID = championlibrary.get_champions_name
 
 #declare api key
-APIKey = "YourAPIKeyHere"
+RiotAPIKey = os.getenv("RiotAPI")
 
 # declare summoner name array and set input to nothing
 summoner_names = []
