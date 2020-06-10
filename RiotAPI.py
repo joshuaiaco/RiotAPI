@@ -23,7 +23,7 @@ async def on_ready():
     championlibrary = importlib.import_module('League-Champion-ID.getChampionNameByID', None)
     getChampionNameByID = championlibrary.get_champions_name
 
-    #declare api key
+    #declare api key, obtained from .env file
     RiotAPIKey = os.getenv("RIOT_TOKEN")
 
     # declare summoner name array and set input to nothing
@@ -90,8 +90,9 @@ async def on_ready():
 
         print ("Summoner Level: "+str(user['summonerLevel']))
 
-        #declare encrypted summoner id for use with other endpoints
+        #declare encrypted summoner and account ids for use with other endpoints
         summoner_id = user['id']
+        account_id = user['accountId']
 
         #declare league url
         LeagueUrl = "https://"+url_code+".api.riotgames.com/lol/league/v4/entries/by-summoner/"
@@ -147,14 +148,14 @@ async def on_ready():
         #declare total match url
         MatchUrl = "https://"+url_code+".api.riotgames.com/lol/match/v4/matchlists/by-account/"
 
-        #declare and execute match API call
-        url = MatchUrl+summoner_id
+        #declare and execute match API call. Requires account id instead of summoner id.
+        url = MatchUrl+account_id
         headers = {'X-Riot-Token': RiotAPIKey,}
         response = requests.get(url = url, headers=headers,)
 
         #print matches
         matches = json.loads(response.text)
-        print ("Total matches: "+str(matches))
+        print ("Total matches: "+str(matches['totalGames']))
 
 client.run(TOKEN)
 
