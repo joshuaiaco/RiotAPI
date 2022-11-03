@@ -1,6 +1,6 @@
 import requests
 import json
-import importlib
+import urllib.request
 import os
 import sys
 from dotenv import load_dotenv
@@ -10,10 +10,6 @@ path = os.path.abspath(os.path.dirname(__file__))
 
 #load environment file with api token, assign client object
 load_dotenv(os.path.join(path, '.env'))
-
-#this import statement is necessary because the directory with the champion ids has a dash
-championlibrary = importlib.import_module('League-Champion-ID.getChampionNameByID', None)
-getChampionNameByID = championlibrary.get_champions_name
 
 #declare api key, obtained from .env file
 RiotAPIKey = os.getenv("RIOT_TOKEN")
@@ -73,7 +69,7 @@ for i in range(len(summoner_names)):
         user = json.loads(response.text)
 
         #print summoner name from API call if found
-        print ("\n9Name: "+user['name'])
+        print ("\nName: "+user['name'])
         
     #error handling, print summoner name     
     except KeyError:
@@ -123,9 +119,24 @@ for i in range(len(summoner_names)):
     #print top 10 summoner champion info from API call, handle summoner found but no/expired champions
     try:
         champion = json.loads(response.text)
+        #champion id key from API response
+        championid = champion[1]['championId']
+
+        #load champions json file from datadragon
+        version = "12.21.1"
+        with urllib.request.urlopen("http://ddragon.leagueoflegends.com/cdn/"+version+"/data/en_US/champion.json") as url:
+            data = json.load(url)
+
+        #define champion id retrieval function
+        def champion_id():
+            for x in data['data']:
+                id = x[0]['id']
+                print(id)
+
+        champion_id()
+
         for j in range(10):
-            championid = champion[j]['championId']
-            print ("Champion: "+str(getChampionNameByID(championid)))
+            print ("Champion: "+str(championid))
             print ("Mastery Level: "+str(champion[j]['championLevel']))
             print ("Mastery Points: "+str(champion[j]['championPoints']))
             #if statement to sort true and false chest granting to yes and no
