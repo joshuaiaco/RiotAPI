@@ -118,29 +118,35 @@ for i in range(len(summoner_names)):
 
     #print top 10 summoner champion info from API call, handle summoner found but no/expired champions
     try:
-        champion = json.loads(response.text)
-        #champion id key from API response
-        championid = champion[1]['championId']
+        for x in range(10):
+            #load api response
+            champion = json.loads(response.text)
+            #champion id key from API response
+            championid = champion[x]['championId']
 
-        #load champions json file from datadragon
-        version = "12.21.1"
-        with urllib.request.urlopen("http://ddragon.leagueoflegends.com/cdn/"+version+"/data/en_US/champion.json") as url:
-            data = json.load(url)
+            #load champions json file from datadragon, take latest version from index for latest patch
+            with urllib.request.urlopen("https://ddragon.leagueoflegends.com/api/versions.json") as versions:
+                versions = json.load(versions)
+                version = versions[0]
 
-        #define champion id retrieval function
-        def champion_id():
-            for x in data['data']:
-                id = x[0]['id']
-                print(id)
+            with urllib.request.urlopen("http://ddragon.leagueoflegends.com/cdn/"+version+"/data/en_US/champion.json") as url:
+                data = json.load(url)
 
-        champion_id()
+            #define champion id matching function
+            def champion_id(y):
+                #loop through each key in json file, if champion id passed into function, cast id to string, retrieve champion name and return it as result
+                for key in data['data']:
+                    if str(y) == (data['data'][key]['key']):
+                        championname = (data['data'][key]['name'])
+                return championname
 
-        for j in range(10):
-            print ("Champion: "+str(championid))
-            print ("Mastery Level: "+str(champion[j]['championLevel']))
-            print ("Mastery Points: "+str(champion[j]['championPoints']))
+            #print champion info
+            #run champion id function to retrieve name and get other information from original response
+            print ("Champion: "+(champion_id(championid)))
+            print ("Mastery Level: "+str(champion[x]['championLevel']))
+            print ("Mastery Points: "+str(champion[x]['championPoints']))
             #if statement to sort true and false chest granting to yes and no
-            if str(champion[j]['chestGranted']) == "True":
+            if str(champion[x]['chestGranted']) == "True":
                 print("Chest earned?: Yes\n")
             else:
                 print("Chest earned?: No\n")
